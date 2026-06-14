@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useGame, Avatar } from "../context/GameContext";
 import { CosmicBackground } from "../components/CosmicBackground";
 import { MALE_AVATARS, FEMALE_AVATARS } from "../lib/data";
+import { AvatarIcon } from "../components/AvatarIcon";
 
 export function AvatarSelection() {
   const { setAvatar, setScreen } = useGame();
@@ -47,7 +48,7 @@ export function AvatarSelection() {
                   }`}
                   data-testid={`btn-avatar-${avatar.id}`}
                 >
-                  <span className="text-4xl mb-2 drop-shadow-md">{avatar.emoji}</span>
+                  <AvatarIcon name={avatar.icon} size={36} className="mb-2 text-white drop-shadow-md" />
                   <span className="text-xs font-bold text-white/90">{avatar.name}</span>
                 </button>
               ))}
@@ -68,7 +69,7 @@ export function AvatarSelection() {
                   }`}
                   data-testid={`btn-avatar-${avatar.id}`}
                 >
-                  <span className="text-4xl mb-2 drop-shadow-md">{avatar.emoji}</span>
+                  <AvatarIcon name={avatar.icon} size={36} className="mb-2 text-white drop-shadow-md" />
                   <span className="text-xs font-bold text-white/90">{avatar.name}</span>
                 </button>
               ))}

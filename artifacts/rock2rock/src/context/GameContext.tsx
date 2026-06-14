@@ -5,7 +5,7 @@ export type Screen = "INTRO_SPLASH" | "LOGIN_SIGNUP" | "AVATAR_SELECTION" | "MAI
 export interface Avatar {
   id: string;
   name: string;
-  emoji: string;
+  icon: string;
   gradient: string;
   gender: "male" | "female";
 }

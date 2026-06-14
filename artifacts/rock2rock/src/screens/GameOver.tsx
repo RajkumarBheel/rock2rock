@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useGame } from "../context/GameContext";
 import { playVictory, playDefeat, playClick } from "../lib/audio";
+import { AvatarIcon } from "../components/AvatarIcon";
 
 export function GameOver() {
   const { isWinner, matchWins, matchLosses, selectedAvatar, resetMatch } = useGame();
@@ -82,9 +83,9 @@ export function GameOver() {
               transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
             />
             <div
-              className={`w-24 h-24 rounded-lg bg-gradient-to-br ${selectedAvatar.gradient} flex items-center justify-center text-5xl z-10 shadow-[0_0_30px_rgba(168,85,247,0.8)]`}
+              className={`w-24 h-24 rounded-lg bg-gradient-to-br ${selectedAvatar.gradient} flex items-center justify-center z-10 shadow-[0_0_30px_rgba(168,85,247,0.8)]`}
             >
-              {selectedAvatar.emoji}
+              <AvatarIcon name={selectedAvatar.icon} size={48} className="text-white" />
             </div>
           </div>
         )}

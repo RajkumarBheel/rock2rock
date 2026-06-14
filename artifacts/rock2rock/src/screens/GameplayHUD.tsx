@@ -12,6 +12,8 @@ import {
   playClick,
   playHover,
 } from "../lib/audio";
+import { AvatarIcon } from "../components/AvatarIcon";
+import { AlertTriangle } from "lucide-react";
 
 const CHOICES: Choice[] = ["rock", "paper", "scissors"];
 
@@ -186,7 +188,7 @@ export function GameplayHUD() {
               exit={{ scale: 0.8, opacity: 0 }}
               className="bg-slate-900 border border-white/10 rounded-2xl p-8 max-w-sm w-full mx-4 shadow-[0_0_40px_rgba(168,85,247,0.3)] text-center"
             >
-              <div className="text-4xl mb-4">⚠️</div>
+              <AlertTriangle size={40} className="text-yellow-400 mb-4" />
               <h3 className="text-xl font-black text-white mb-2 tracking-widest">FORFEIT MATCH?</h3>
               <p className="text-gray-400 text-sm mb-6">You will lose this match and return to the lobby.</p>
               <div className="flex gap-4 justify-center">
@@ -213,8 +215,8 @@ export function GameplayHUD() {
       <header className="relative z-10 p-4 md:p-6 flex justify-between items-center bg-black/30 backdrop-blur-sm border-b border-white/10">
         <div className="flex items-center gap-3">
           {selectedAvatar && (
-            <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${selectedAvatar.gradient} flex items-center justify-center text-2xl shadow-[0_0_15px_rgba(168,85,247,0.4)] border border-purple-500`}>
-              {selectedAvatar.emoji}
+            <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${selectedAvatar.gradient} flex items-center justify-center shadow-[0_0_15px_rgba(168,85,247,0.4)] border border-purple-500`}>
+              <AvatarIcon name={selectedAvatar.icon} size={22} className="text-white" />
             </div>
           )}
           <div>
@@ -241,8 +243,8 @@ export function GameplayHUD() {
             <div className="flex gap-1.5 mt-1 justify-end">{renderDots(matchLosses, true)}</div>
           </div>
           {opponent?.avatar && (
-            <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${opponent.avatar.gradient} flex items-center justify-center text-2xl shadow-[0_0_15px_rgba(239,68,68,0.4)] border border-red-500`}>
-              {opponent.avatar.emoji}
+            <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${opponent.avatar.gradient} flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.4)] border border-red-500`}>
+              <AvatarIcon name={opponent.avatar.icon} size={22} className="text-white" />
             </div>
           )}
         </div>

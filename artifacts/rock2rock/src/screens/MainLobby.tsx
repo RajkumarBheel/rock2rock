@@ -12,6 +12,7 @@ import {
   setSoundEnabled,
   setMusicEnabled,
 } from "../lib/audio";
+import { AvatarIcon } from "../components/AvatarIcon";
 
 function AboutModal({ onClose }: { onClose: () => void }) {
   return (
@@ -158,7 +159,7 @@ export function MainLobby() {
     startMatch({
       name: "Cosmic AI",
       region: "UNIVERSE",
-      avatar: { id: "ai", name: "AI Core", emoji: "🤖", gradient: "from-gray-800 to-black", gender: "male" },
+      avatar: { id: "ai", name: "AI Core", icon: "Bot", gradient: "from-gray-800 to-black", gender: "male" },
       score: 9999,
     });
   };
@@ -207,8 +208,8 @@ export function MainLobby() {
               <span className="text-xs text-purple-300">{playerRegion || "NA"}</span>
             </div>
             {selectedAvatar && (
-              <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${selectedAvatar.gradient} flex items-center justify-center text-2xl border border-purple-500/50 shadow-[0_0_10px_rgba(168,85,247,0.3)]`}>
-                {selectedAvatar.emoji}
+              <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${selectedAvatar.gradient} flex items-center justify-center border border-purple-500/50 shadow-[0_0_10px_rgba(168,85,247,0.3)]`}>
+                <AvatarIcon name={selectedAvatar.icon} size={22} className="text-white" />
               </div>
             )}
           </div>
@@ -265,8 +266,8 @@ export function MainLobby() {
                       <td className="py-3 px-4 text-purple-300 font-mono">#{idx + 1}</td>
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
-                          <div className={`w-8 h-8 rounded shrink-0 bg-gradient-to-br ${p.avatar.gradient} flex items-center justify-center text-sm border border-white/10`}>
-                            {p.avatar.emoji}
+                          <div className={`w-8 h-8 rounded shrink-0 bg-gradient-to-br ${p.avatar.gradient} flex items-center justify-center border border-white/10`}>
+                            <AvatarIcon name={p.avatar.icon} size={14} className="text-white" />
                           </div>
                           <div className="flex flex-col">
                             <span className="font-bold text-white group-hover:text-purple-300 transition-colors">{p.name}</span>
