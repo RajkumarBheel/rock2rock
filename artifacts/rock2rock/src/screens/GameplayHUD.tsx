@@ -2,6 +2,16 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGame, Choice } from "../context/GameContext";
 import { CosmicBackground } from "../components/CosmicBackground";
+import {
+  playRock,
+  playPaper,
+  playScissors,
+  playRoundWin,
+  playRoundLoss,
+  playTie,
+  playClick,
+  playHover,
+} from "../lib/audio";
 
 const CHOICES: Choice[] = ["rock", "paper", "scissors"];
 
@@ -20,20 +30,11 @@ function RockIcon({ size = 64 }: { size?: number }) {
 function PaperIcon({ size = 64 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="12" y="10" width="40" height="48" rx="4" fill="#e0f2fe" />
-      <rect x="12" y="10" width="40" height="48" rx="4" fill="url(#paperGrad)" />
-      <line x1="20" y1="22" x2="44" y2="22" stroke="#93c5fd" strokeWidth="2" strokeLinecap="round" />
-      <line x1="20" y1="30" x2="44" y2="30" stroke="#93c5fd" strokeWidth="2" strokeLinecap="round" />
-      <line x1="20" y1="38" x2="36" y2="38" stroke="#93c5fd" strokeWidth="2" strokeLinecap="round" />
       <rect x="10" y="8" width="40" height="48" rx="4" fill="url(#paperGrad2)" opacity="0.85" />
       <line x1="18" y1="20" x2="42" y2="20" stroke="#bfdbfe" strokeWidth="1.5" strokeLinecap="round" />
       <line x1="18" y1="28" x2="42" y2="28" stroke="#bfdbfe" strokeWidth="1.5" strokeLinecap="round" />
       <line x1="18" y1="36" x2="34" y2="36" stroke="#bfdbfe" strokeWidth="1.5" strokeLinecap="round" />
       <defs>
-        <linearGradient id="paperGrad" x1="12" y1="10" x2="52" y2="58" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#dbeafe" />
-          <stop offset="1" stopColor="#bfdbfe" />
-        </linearGradient>
         <linearGradient id="paperGrad2" x1="10" y1="8" x2="50" y2="56" gradientUnits="userSpaceOnUse">
           <stop stopColor="#eff6ff" />
           <stop offset="1" stopColor="#93c5fd" />
@@ -85,13 +86,18 @@ export function GameplayHUD() {
     }
   }, [matchWins, matchLosses, endMatch]);
 
+  const playChoiceSound = (choice: Choice) => {
+    if (choice === "rock") playRock();
+    else if (choice === "paper") playPaper();
+    else playScissors();
+  };
+
   const handleChoiceClick = (choice: Choice) => {
     if (isAnimatingRound || matchWins >= 3 || matchLosses >= 3) return;
 
     setIsAnimatingRound(true);
     setPlayerChoice(choice);
-
-    // TODO: Integrate Howler.js audio sprite triggers here
+    playChoiceSound(choice);
 
     const oChoice = CHOICES[Math.floor(Math.random() * CHOICES.length)];
     setOpponentChoice(oChoice);
@@ -115,7 +121,10 @@ export function GameplayHUD() {
       setRoundResultText(resultText);
       addRoundResult({ playerChoice: choice, opponentChoice: oChoice, winner });
 
-      // TODO: Integrate Howler.js audio sprite triggers here
+      // Play round outcome sound
+      if (winner === "player") playRoundWin();
+      else if (winner === "opponent") playRoundLoss();
+      else playTie();
 
       setTimeout(() => {
         setPlayerChoice(null);
@@ -182,14 +191,14 @@ export function GameplayHUD() {
               <p className="text-gray-400 text-sm mb-6">You will lose this match and return to the lobby.</p>
               <div className="flex gap-4 justify-center">
                 <button
-                  onClick={() => { resetMatch(); }}
+                  onClick={() => { playClick(); resetMatch(); }}
                   className="px-6 py-3 bg-red-700 hover:bg-red-600 text-white font-black rounded-xl transition-all shadow-[0_0_15px_rgba(239,68,68,0.4)]"
                   data-testid="btn-confirm-exit"
                 >
                   EXIT
                 </button>
                 <button
-                  onClick={() => setShowExitConfirm(false)}
+                  onClick={() => { playClick(); setShowExitConfirm(false); }}
                   className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl transition-all border border-white/10"
                   data-testid="btn-cancel-exit"
                 >
@@ -204,9 +213,7 @@ export function GameplayHUD() {
       <header className="relative z-10 p-4 md:p-6 flex justify-between items-center bg-black/30 backdrop-blur-sm border-b border-white/10">
         <div className="flex items-center gap-3">
           {selectedAvatar && (
-            <div
-              className={`w-12 h-12 rounded-xl bg-gradient-to-br ${selectedAvatar.gradient} flex items-center justify-center text-2xl shadow-[0_0_15px_rgba(168,85,247,0.4)] border border-purple-500`}
-            >
+            <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${selectedAvatar.gradient} flex items-center justify-center text-2xl shadow-[0_0_15px_rgba(168,85,247,0.4)] border border-purple-500`}>
               {selectedAvatar.emoji}
             </div>
           )}
@@ -219,7 +226,8 @@ export function GameplayHUD() {
         <div className="flex flex-col items-center gap-1">
           <div className="text-2xl font-black text-white/20">VS</div>
           <button
-            onClick={() => setShowExitConfirm(true)}
+            onClick={() => { playClick(); setShowExitConfirm(true); }}
+            onMouseEnter={() => playHover()}
             className="px-3 py-1 bg-red-900/40 hover:bg-red-700/60 border border-red-500/40 rounded-lg text-red-400 hover:text-white text-xs font-bold transition-all tracking-widest"
             data-testid="btn-exit-match"
           >
@@ -233,9 +241,7 @@ export function GameplayHUD() {
             <div className="flex gap-1.5 mt-1 justify-end">{renderDots(matchLosses, true)}</div>
           </div>
           {opponent?.avatar && (
-            <div
-              className={`w-12 h-12 rounded-xl bg-gradient-to-br ${opponent.avatar.gradient} flex items-center justify-center text-2xl shadow-[0_0_15px_rgba(239,68,68,0.4)] border border-red-500`}
-            >
+            <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${opponent.avatar.gradient} flex items-center justify-center text-2xl shadow-[0_0_15px_rgba(239,68,68,0.4)] border border-red-500`}>
               {opponent.avatar.emoji}
             </div>
           )}
@@ -263,7 +269,6 @@ export function GameplayHUD() {
         </AnimatePresence>
 
         <div className="relative w-full max-w-4xl h-56 flex justify-between items-center px-6 md:px-16">
-          {/* Player side */}
           <div className="w-2/5 flex flex-col items-center justify-center h-full relative border-r border-white/5">
             <AnimatePresence>
               {playerChoice ? (
@@ -291,7 +296,6 @@ export function GameplayHUD() {
             </AnimatePresence>
           </div>
 
-          {/* Center dot */}
           <div className="w-1/5 flex justify-center">
             <motion.div
               className="w-3 h-3 rounded-full bg-purple-500/50"
@@ -300,7 +304,6 @@ export function GameplayHUD() {
             />
           </div>
 
-          {/* Opponent side */}
           <div className="w-2/5 flex flex-col items-center justify-center h-full relative border-l border-white/5">
             <AnimatePresence>
               {opponentChoice ? (
@@ -331,44 +334,41 @@ export function GameplayHUD() {
       </main>
 
       <footer className="relative z-10 p-6 md:p-8 flex justify-center gap-6 md:gap-10 bg-gradient-to-t from-black to-transparent">
-        {/* Rock */}
         <motion.button
           onClick={() => handleChoiceClick("rock")}
+          onHoverStart={() => playHover()}
           disabled={isAnimatingRound}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           className="w-24 h-24 rounded-full backdrop-blur-sm bg-gradient-to-br from-stone-700 to-stone-900 border border-stone-500/40 shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:shadow-[0_0_30px_rgba(168,85,247,0.7)] transition-shadow flex flex-col items-center justify-center gap-1 disabled:opacity-40 disabled:pointer-events-none"
           data-testid="btn-choice-rock"
         >
-          {/* TODO: Integrate Howler.js audio sprite triggers here */}
           <RockIcon size={40} />
           <span className="text-[9px] font-black text-stone-300 tracking-widest">ROCK</span>
         </motion.button>
 
-        {/* Paper */}
         <motion.button
           onClick={() => handleChoiceClick("paper")}
+          onHoverStart={() => playHover()}
           disabled={isAnimatingRound}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           className="w-24 h-24 rounded-full backdrop-blur-sm bg-gradient-to-br from-sky-800 to-indigo-950 border border-sky-500/40 shadow-[0_0_15px_rgba(56,189,248,0.3)] hover:shadow-[0_0_30px_rgba(56,189,248,0.7)] transition-shadow flex flex-col items-center justify-center gap-1 disabled:opacity-40 disabled:pointer-events-none"
           data-testid="btn-choice-paper"
         >
-          {/* TODO: Integrate Howler.js audio sprite triggers here */}
           <PaperIcon size={40} />
           <span className="text-[9px] font-black text-sky-300 tracking-widest">PAPER</span>
         </motion.button>
 
-        {/* Scissors */}
         <motion.button
           onClick={() => handleChoiceClick("scissors")}
+          onHoverStart={() => playHover()}
           disabled={isAnimatingRound}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           className="w-24 h-24 rounded-full backdrop-blur-sm bg-gradient-to-br from-zinc-600 to-slate-900 border border-zinc-400/30 shadow-[0_0_15px_rgba(161,161,170,0.3)] hover:shadow-[0_0_30px_rgba(161,161,170,0.7)] transition-shadow flex flex-col items-center justify-center gap-1 disabled:opacity-40 disabled:pointer-events-none"
           data-testid="btn-choice-scissors"
         >
-          {/* TODO: Integrate Howler.js audio sprite triggers here */}
           <ScissorsIcon size={40} />
           <span className="text-[9px] font-black text-zinc-300 tracking-widest">SCISSORS</span>
         </motion.button>
