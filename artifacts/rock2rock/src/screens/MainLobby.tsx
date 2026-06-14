@@ -68,14 +68,14 @@ function AboutModal({ onClose }: { onClose: () => void }) {
               <span className="text-gray-300 group-hover:text-white transition-colors break-all">rajkumarbheel2675@gmail.com</span>
             </a>
             <a
-              href="https://linkedin.com/in/RajkumarBheel"
+              href="https://www.linkedin.com/in/rajkumar-bheel"
               target="_blank"
               rel="noreferrer"
               className="flex items-center gap-3 bg-white/5 hover:bg-blue-900/30 border border-white/10 hover:border-blue-500/40 rounded-xl px-4 py-3 transition-all group"
               data-testid="link-linkedin"
             >
               <Linkedin size={18} className="text-blue-400 group-hover:text-blue-300 shrink-0 transition-colors" />
-              <span className="text-gray-300 group-hover:text-blue-300 transition-colors">linkedin.com/in/RajkumarBheel</span>
+              <span className="text-gray-300 group-hover:text-blue-300 transition-colors">linkedin.com/in/rajkumar-bheel</span>
             </a>
             <a
               href="https://github.com/RajkumarBheel"
