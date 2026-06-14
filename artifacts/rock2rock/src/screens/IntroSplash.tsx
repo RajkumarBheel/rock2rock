@@ -30,28 +30,22 @@ export function IntroSplash() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <motion.div
-              className="w-2 h-2 rounded-full bg-purple-500 mb-4"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            />
-            <motion.p
-              className="tracking-[0.3em] text-xs text-purple-300 mb-2 uppercase"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              Presented By
-            </motion.p>
             <motion.h1
-              className="text-6xl font-black text-white drop-shadow-[0_0_15px_rgba(168,85,247,0.6)]"
+              className="text-7xl font-black text-white drop-shadow-[0_0_15px_rgba(168,85,247,0.6)] tracking-widest"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.4 }}
+              transition={{ duration: 1, delay: 0.2 }}
             >
-              R K B 67
+              RKB 67
             </motion.h1>
+            <motion.p
+              className="tracking-[0.5em] text-sm text-purple-300 mt-3 uppercase"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+            >
+              Presents
+            </motion.p>
           </motion.div>
         )}
 
