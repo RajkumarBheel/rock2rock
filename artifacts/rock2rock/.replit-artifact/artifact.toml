@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Rock 2 Rock"
+version = "1.0.0"
+id = "artifacts/rock2rock"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21963
+
+[services.development]
+run = "pnpm --filter @workspace/rock2rock run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/rock2rock", "run", "build" ]
+publicDir = "artifacts/rock2rock/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21963"
+BASE_PATH = "/"

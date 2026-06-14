@@ -1,0 +1,77 @@
+You are an expert Frontend Game Developer. Build a complete, fully functional, responsive, and highly polished browser game named "Rock 2 Rock", developed by "R K B 67".
+
+### Tech Stack Required:
+- React (Functional components, Hooks, Context API)
+- Tailwind CSS (For all styling, layouts, gradients, and custom neon box-shadows)
+- Framer Motion (For all page transitions, text animations, hovering assets, and win/lose screens)
+- JavaScript (ES6+)
+
+---
+
+### GAME CORE CONCEPT & RULES
+"Rock 2 Rock" is a modernized, dark cosmic-themed digital version of Rock, Paper, Scissors.
+- Rock beats Scissors.
+- Scissors beats Paper.
+- Paper beats Rock.
+Matches are played as a Best-of-5 rounds system. The first player to reach 3 round wins wins the overall match.
+
+---
+
+### GLOBAL APP STATE & FLOW
+Manage the game state using a robust React Context (`GameContext`). The application must flow sequentially through these screens based on a state variable (`currentScreen`):
+1. INTRO_SPLASH
+2. LOGIN_SIGNUP
+3. AVATAR_SELECTION
+4. MAIN_LOBBY
+5. GAMEPLAY_HUD
+6. GAME_OVER
+
+---
+
+### SCREEN-BY-SCREEN ARCHITECTURE & DESIGN SPECIFICATIONS
+
+#### 1. INTRO_SPLASH SCREEN
+- Visuals: Solid black background. A tiny purple light dot scales up in the center.
+- Sequence 1 (Creator Reveal): Display text "Presented By" in small, tracked-out font, followed by "R K B 67" in an oversized, bold font with a glowing text shadow (`drop-shadow-[0_0_15px_rgba(168,85,247,0.6)]`). Holds for 2 seconds.
+- Sequence 2 (Transition): A full-screen horizontal motion wipe simulating a giant cosmic rock flying across the screen.
+- Sequence 3 (Title Reveal): The text "Rock 2 Rock" emerges with an intense neon purple scale-up animation. Holds for 1.5 seconds, then automatically transitions to LOGIN_SIGNUP.
+
+#### 2. LOGIN_SIGNUP SCREEN
+- Visuals: Dark cosmic purple background (`bg-slate-950` with purple gradients).
+- Components: A centered glassmorphic card (`bg-white/5 backdrop-blur-md border border-white/10`).
+- Fields: Input fields for Username and Region with custom active purple borders. A glowing CTA button for "Enter Cosmic Arena". Clicking this saves the profile data to state and transitions to AVATAR_SELECTION.
+
+#### 3. AVATAR_SELECTION SCREEN
+- Components: Two main grid sections wrapped in glowing neon borders: "MALE AVATARS" and "FEMALE AVATARS".
+- Assets: Each grid must render 5 placeholder avatar cards (total 10). Create beautiful fallback CSS designs for these placeholders using distinct gradients (e.g., deep cyan, plasma red, cosmic blue) and distinct emojis or unique text names to differentiate them visually.
+- Interactivity: Clicking an avatar applies an active border (`border-2 border-purple-500 shadow-[0_0_15px_#a855f7]`). 
+- Navigation: A "Confirm Selection" button at the bottom that remains disabled until an avatar is selected. Clicking it routes to MAIN_LOBBY.
+
+#### 4. MAIN_LOBBY SCREEN
+- Top Left: Game Logo "Rock 2 Rock" and the player's cumulative Score.
+- Top Right: Displays the Selected Avatar thumbnail, Profile Name, Region, and mock toggle switches for "Game Sound" and "Music".
+- Center Panel (Global Top 10 Leaderboard): A beautifully formatted Tailwind table showing Rank (1 to 10), Player Name, Total Wins, and a stylized "Challenge" button next to each row. Clicking any "Challenge" button automatically triggers game matchmaking against that player profile.
+- Bottom Actions: Two large, glowing primary action buttons: "PLAY RANDOM MODE" (Matchmaking) and "AI CHALLENGE". Clicking either sets the opponent state (Real Player Mock or AI) and triggers a transition to GAMEPLAY_HUD.
+
+#### 5. GAMEPLAY_HUD SCREEN
+- Top Bar: Split layout showing Player 1 (Left) and Opponent (Right) stats: avatar thumbnail, name, overall match score, and 3 round-indicator dots (turns green for a win, red for a loss).
+- Center Viewport: The active duel zone. While waiting for selection, show a synchronized 3, 2, 1 countdown animation.
+- Bottom Control Panel: The player's active inputs. 3 large, circular glassmorphic buttons representing Rock, Paper, and Scissors.
+  - Rock: Rendered with a solid earth/stone theme.
+  - Paper: Rendered with a futuristic holographic/shield theme.
+  - Scissors: Rendered with a sharp metallic/blade theme.
+- Round Resolution Logic: When the player clicks a selection, mock the opponent's choice instantly (or compute AI choice). Animate both choices crashing together in the center viewport using a Framer Motion spring transition. Display the round outcome text ("ROUND WIN" / "ROUND LOSS" / "TIE"), update the round-indicator dots, and reset for the next round after a 2-second delay. Once a player hits 3 round wins, route to GAME_OVER.
+
+#### 6. GAME_OVER SCREEN
+This screen conditionally renders one of two highly polished visual states:
+- WIN STATE (Victory Crystal Throne): A massive visual text banner reading "VICTORY" using intense pulsing scaling effects. Display the player's avatar framed inside a giant, multi-layered purple crystal layout.
+- DEFEAT STATE (Vortex of Despair): A dark, ominous background overlay. A dramatic visual text banner reading "DEFEAT" styled with dark red/orange ambient shadow effects. Debris fragments drift across the screen.
+- Navigation: Both states must feature a "Return to Lobby" button to reset the match state variables and go back to MAIN_LOBBY.
+
+---
+
+### FRONTEND CODE QUALITY & DESIGN STANDARDS
+1. **Framer Motion Integration:** Apply `AnimatePresence` for seamless screen cuts. Make sure background cosmic elements feature continuous, infinite floating animations (`animate={{ y: [0, -10, 0] }}`).
+2. **Tailwind Architecture:** Rely heavily on arbitrary utility shadows (`shadow-[0_0_20px_rgba(...)]`), flexible grid/flexbox controls, custom gradient overlays (`bg-gradient-to-br from-purple-900 to-slate-950`), and responsive layouts to ensure the application behaves like a native web app across desktop and mobile browsers.
+3. **Audio Placeholders:** Provide clear `// TODO: Integrate Howler.js audio sprite triggers here` comment anchors inside all Framer Motion callback triggers (`onHoverStart`, `onTap`) and lifecycle hooks (game state changes, round outcomes, menu switches).
+4. **Code Structure:** Write modular, clean, readable React code. Split code into logical UI component structures or organize it meticulously within a single, highly readable workspace file if optimal for the Replit environment. Ensure no breaking syntax bugs exist.
