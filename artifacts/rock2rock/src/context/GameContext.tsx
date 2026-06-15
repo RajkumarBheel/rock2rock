@@ -98,7 +98,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     setState(s => ({
       ...s,
       isWinner,
-      playerScore: s.playerScore + (isWinner ? 100 : 10),
+      playerScore: s.playerScore + (isWinner ? 100 : 0),
       currentScreen: "GAME_OVER"
     }));
   };

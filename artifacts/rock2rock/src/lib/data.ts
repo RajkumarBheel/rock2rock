@@ -17,14 +17,14 @@ export const FEMALE_AVATARS: Avatar[] = [
 ];
 
 export const MOCK_LEADERBOARD: Opponent[] = [
-  { name: "CosmicKing",    region: "NA",   avatar: MALE_AVATARS[0],   score: 9540 },
-  { name: "StarDust",      region: "EU",   avatar: FEMALE_AVATARS[1], score: 8230 },
-  { name: "MeteorStrike",  region: "ASIA", avatar: MALE_AVATARS[1],   score: 7800 },
-  { name: "LunarEclipse",  region: "NA",   avatar: FEMALE_AVATARS[3], score: 7200 },
-  { name: "DarkMatter",    region: "SA",   avatar: MALE_AVATARS[4],   score: 6500 },
-  { name: "SuperNova",     region: "OCE",  avatar: FEMALE_AVATARS[0], score: 6100 },
-  { name: "SolarFlare",    region: "EU",   avatar: MALE_AVATARS[2],   score: 5900 },
-  { name: "AstroBlade",    region: "ASIA", avatar: MALE_AVATARS[3],   score: 5400 },
-  { name: "CometTail",     region: "NA",   avatar: FEMALE_AVATARS[2], score: 4800 },
-  { name: "GalaxyQueen",   region: "SA",   avatar: FEMALE_AVATARS[4], score: 4200 },
+  { name: "Jahazaib Ali",  region: "ASIA", avatar: MALE_AVATARS[0],   score: 9540 },
+  { name: "Sanjay",        region: "ASIA", avatar: MALE_AVATARS[1],   score: 8230 },
+  { name: "Umer Samoon",   region: "ASIA", avatar: MALE_AVATARS[2],   score: 7800 },
+  { name: "Rohit Lal",     region: "ASIA", avatar: MALE_AVATARS[3],   score: 7200 },
+  { name: "Jeelan Raza",   region: "ASIA", avatar: MALE_AVATARS[4],   score: 6500 },
+  { name: "M. Hafi",       region: "ASIA", avatar: FEMALE_AVATARS[0], score: 6100 },
+  { name: "Waqar A.P",     region: "ASIA", avatar: FEMALE_AVATARS[1], score: 5900 },
+  { name: "Sooraj Kumar",  region: "ASIA", avatar: FEMALE_AVATARS[2], score: 5400 },
+  { name: "Sikander Khan", region: "ASIA", avatar: FEMALE_AVATARS[3], score: 4800 },
+  { name: "M. Muaaz",      region: "ASIA", avatar: FEMALE_AVATARS[4], score: 4200 },
 ];

@@ -85,7 +85,7 @@ router.patch("/players/:id/score", async (req, res) => {
       .set({
         wins: player.wins + (won ? 1 : 0),
         losses: player.losses + (won ? 0 : 1),
-        score: player.score + (won ? 100 : 10),
+        score: player.score + (won ? 100 : 0),
         ...(avatarId ? { avatarId } : {}),
         ...(avatarIcon ? { avatarIcon } : {}),
       })
