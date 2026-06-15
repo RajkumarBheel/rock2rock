@@ -27,6 +27,7 @@ export interface RoundResult {
 
 export interface GameState {
   currentScreen: Screen;
+  playerId: number | null;
   playerName: string;
   playerRegion: string;
   selectedAvatar: Avatar | null;
@@ -40,16 +41,19 @@ export interface GameState {
 
 export interface GameContextType extends GameState {
   setScreen: (screen: Screen) => void;
-  setPlayerProfile: (name: string, region: string) => void;
+  setPlayerProfile: (id: number, name: string, region: string, score: number) => void;
   setAvatar: (avatar: Avatar) => void;
   setOpponent: (opponent: Opponent) => void;
   addRoundResult: (result: RoundResult) => void;
   resetMatch: () => void;
   endMatch: (isWinner: boolean) => void;
+  logout: () => void;
+  updateScore: (score: number) => void;
 }
 
 const defaultState: GameState = {
   currentScreen: "INTRO_SPLASH",
+  playerId: null,
   playerName: "",
   playerRegion: "",
   selectedAvatar: null,
@@ -67,16 +71,16 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
   const [state, setState] = useState<GameState>(defaultState);
 
   const setScreen = (currentScreen: Screen) => setState(s => ({ ...s, currentScreen }));
-  
-  const setPlayerProfile = (playerName: string, playerRegion: string) => 
-    setState(s => ({ ...s, playerName, playerRegion }));
-    
-  const setAvatar = (selectedAvatar: Avatar) => 
+
+  const setPlayerProfile = (id: number, playerName: string, playerRegion: string, score: number) =>
+    setState(s => ({ ...s, playerId: id, playerName, playerRegion, playerScore: score }));
+
+  const setAvatar = (selectedAvatar: Avatar) =>
     setState(s => ({ ...s, selectedAvatar }));
-    
-  const setOpponent = (opponent: Opponent) => 
+
+  const setOpponent = (opponent: Opponent) =>
     setState(s => ({ ...s, opponent }));
-    
+
   const addRoundResult = (result: RoundResult) => {
     setState(s => {
       const isPlayerWin = result.winner === "player";
@@ -94,7 +98,7 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     setState(s => ({
       ...s,
       isWinner,
-      playerScore: s.playerScore + (isWinner ? 1 : 0),
+      playerScore: s.playerScore + (isWinner ? 100 : 10),
       currentScreen: "GAME_OVER"
     }));
   };
@@ -111,6 +115,14 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
     }));
   };
 
+  const logout = () => {
+    setState({ ...defaultState, currentScreen: "LOGIN_SIGNUP" });
+  };
+
+  const updateScore = (score: number) => {
+    setState(s => ({ ...s, playerScore: score }));
+  };
+
   return (
     <GameContext.Provider value={{
       ...state,
@@ -120,7 +132,9 @@ export const GameProvider = ({ children }: { children: ReactNode }) => {
       setOpponent,
       addRoundResult,
       resetMatch,
-      endMatch
+      endMatch,
+      logout,
+      updateScore,
     }}>
       {children}
     </GameContext.Provider>

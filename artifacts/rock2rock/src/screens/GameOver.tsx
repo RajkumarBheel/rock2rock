@@ -5,12 +5,28 @@ import { playVictory, playDefeat, playClick } from "../lib/audio";
 import { AvatarIcon } from "../components/AvatarIcon";
 
 export function GameOver() {
-  const { isWinner, matchWins, matchLosses, selectedAvatar, resetMatch } = useGame();
+  const { isWinner, matchWins, matchLosses, selectedAvatar, resetMatch, playerId, updateScore } = useGame();
 
   useEffect(() => {
     if (isWinner) playVictory();
     else playDefeat();
   }, [isWinner]);
+
+  useEffect(() => {
+    if (!playerId) return;
+    fetch(`/api/players/${playerId}/score`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        won: isWinner,
+        avatarId: selectedAvatar?.id,
+        avatarIcon: selectedAvatar?.icon,
+      }),
+    })
+      .then((r) => r.json())
+      .then((data) => { if (data.score !== undefined) updateScore(data.score); })
+      .catch(() => {});
+  }, []);
 
   return (
     <motion.div

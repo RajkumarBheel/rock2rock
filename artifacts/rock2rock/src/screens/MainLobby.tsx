@@ -13,7 +13,7 @@ import {
   setMusicEnabled,
 } from "../lib/audio";
 import { AvatarIcon } from "../components/AvatarIcon";
-import { Mail, Linkedin, Github } from "lucide-react";
+import { Mail, Linkedin, Github, LogOut } from "lucide-react";
 
 function AboutModal({ onClose }: { onClose: () => void }) {
   return (
@@ -105,6 +105,7 @@ export function MainLobby() {
     selectedAvatar,
     setOpponent,
     setScreen,
+    logout,
   } = useGame();
 
   const [soundOn, setSoundOn] = useState(true);
@@ -114,7 +115,12 @@ export function MainLobby() {
 
   useEffect(() => {
     startAmbientMusic();
-    return () => stopMusic();
+    const unlock = () => { startAmbientMusic(); document.removeEventListener("click", unlock); };
+    document.addEventListener("click", unlock);
+    return () => {
+      stopMusic();
+      document.removeEventListener("click", unlock);
+    };
   }, []);
 
   const handleSoundToggle = () => {
@@ -214,6 +220,17 @@ export function MainLobby() {
               </div>
             )}
           </div>
+
+          <div className="w-px h-10 bg-white/20" />
+
+          <button
+            onClick={() => { playClick(); logout(); }}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-white/5 hover:bg-red-900/40 border border-white/10 hover:border-red-500/40 text-white/50 hover:text-red-400 text-xs font-bold tracking-widest uppercase transition-all"
+            title="Logout"
+          >
+            <LogOut size={13} />
+            LOGOUT
+          </button>
 
           <div className="w-px h-10 bg-white/20" />
 

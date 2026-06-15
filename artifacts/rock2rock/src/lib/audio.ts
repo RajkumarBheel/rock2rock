@@ -7,8 +7,15 @@ let musicEnabled = true;
 
 function getCtx(): AudioContext {
   if (!ctx) ctx = new AudioContext();
-  if (ctx.state === "suspended") ctx.resume();
   return ctx;
+}
+
+async function ensureRunning(): Promise<boolean> {
+  const c = getCtx();
+  if (c.state === "suspended") {
+    try { await c.resume(); } catch (_) { return false; }
+  }
+  return c.state === "running";
 }
 
 export function setSoundEnabled(v: boolean) { soundEnabled = v; }
@@ -44,17 +51,14 @@ function playTone(
   osc.stop(c.currentTime + startDelay + duration);
 }
 
-// UI click sound
 export function playClick() {
   playTone(600, 0.08, "square", 0.12);
 }
 
-// Hovering / menu nav
 export function playHover() {
   playTone(900, 0.05, "sine", 0.06);
 }
 
-// Rock choice — deep thud
 export function playRock() {
   if (!soundEnabled) return;
   const c = getCtx();
@@ -72,11 +76,9 @@ export function playRock() {
   src.connect(gain);
   gain.connect(c.destination);
   src.start();
-  // low boom
   playTone(80, 0.2, "sine", 0.4, 0, 40);
 }
 
-// Paper choice — airy whoosh
 export function playPaper() {
   if (!soundEnabled) return;
   const c = getCtx();
@@ -100,53 +102,44 @@ export function playPaper() {
   src.start();
 }
 
-// Scissors choice — metallic snip
 export function playScissors() {
   playTone(1200, 0.04, "sawtooth", 0.18, 0, 400);
   playTone(900, 0.04, "sawtooth", 0.14, 0.05, 200);
 }
 
-// Round win — bright ascending arpeggio
 export function playRoundWin() {
   const notes = [523, 659, 784, 1047];
   notes.forEach((f, i) => playTone(f, 0.15, "triangle", 0.25, i * 0.1));
 }
 
-// Round loss — descending sad tone
 export function playRoundLoss() {
   playTone(440, 0.2, "sine", 0.25, 0);
   playTone(330, 0.25, "sine", 0.2, 0.18);
   playTone(220, 0.35, "sine", 0.2, 0.38);
 }
 
-// Tie — neutral ping
 export function playTie() {
   playTone(700, 0.12, "sine", 0.2);
   playTone(700, 0.12, "sine", 0.15, 0.15);
 }
 
-// Victory fanfare
 export function playVictory() {
   const melody = [523, 659, 784, 659, 1047];
   melody.forEach((f, i) => playTone(f, 0.25, "triangle", 0.3, i * 0.18));
-  // bass
   const bass = [261, 330, 392, 523];
   bass.forEach((f, i) => playTone(f, 0.3, "sine", 0.2, i * 0.18));
 }
 
-// Defeat sound
 export function playDefeat() {
   const melody = [440, 370, 311, 262];
   melody.forEach((f, i) => playTone(f, 0.3, "sine", 0.25, i * 0.2));
 }
 
-// Challenge blocked (score too low)
 export function playBlocked() {
   playTone(200, 0.08, "square", 0.2);
   playTone(180, 0.12, "square", 0.2, 0.1);
 }
 
-// Match start countdown beep
 export function playCountdown(num: number) {
   if (num === 0) {
     playTone(880, 0.2, "triangle", 0.35);
@@ -155,21 +148,15 @@ export function playCountdown(num: number) {
   }
 }
 
-// Ambient cosmic music loop
-export function startAmbientMusic() {
-  if (musicPlaying || !musicEnabled) return;
+function buildMusicLoop() {
+  if (!musicEnabled || !musicGain) return;
   const c = getCtx();
-  musicGain = c.createGain();
-  musicGain.gain.setValueAtTime(0.06, c.currentTime);
-  musicGain.connect(c.destination);
-
   const chords = [
     [110, 138, 165],
     [116, 146, 174],
     [98, 123, 147],
     [104, 131, 156],
   ];
-
   let step = 0;
   const chordDuration = 3;
 
@@ -204,16 +191,31 @@ export function startAmbientMusic() {
   (window as any).__musicInterval = interval;
 }
 
+export async function startAmbientMusic() {
+  if (musicPlaying || !musicEnabled) return;
+  const ready = await ensureRunning();
+  if (!ready) return;
+  const c = getCtx();
+  musicGain = c.createGain();
+  musicGain.gain.setValueAtTime(0.06, c.currentTime);
+  musicGain.connect(c.destination);
+  buildMusicLoop();
+}
+
 export function stopMusic() {
   musicPlaying = false;
   musicOscillators.forEach((o) => { try { o.stop(); } catch (_) {} });
   musicOscillators = [];
   if ((window as any).__musicInterval) {
     clearInterval((window as any).__musicInterval);
+    (window as any).__musicInterval = null;
   }
   if (musicGain) {
-    musicGain.gain.setValueAtTime(musicGain.gain.value, getCtx().currentTime);
-    musicGain.gain.linearRampToValueAtTime(0, getCtx().currentTime + 0.3);
+    try {
+      const c = getCtx();
+      musicGain.gain.setValueAtTime(musicGain.gain.value, c.currentTime);
+      musicGain.gain.linearRampToValueAtTime(0, c.currentTime + 0.3);
+    } catch (_) {}
     musicGain = null;
   }
 }
